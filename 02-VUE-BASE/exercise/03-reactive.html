@@ -1,22 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>reactive</title>
-  </head>
-  <body>
-    <div id="app">
-      <h1></h1>
-    </div>
-    <script src="./js/vue.js"></script>
-    <script>
-      const App = {
-        setup() {
-          return {};
-        },
-      };
-      Vue.createApp(App).mount("#app");
-    </script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>reactive</title>
+</head>
+
+<body>
+  <div id="app">
+    <h1>{{message.name}}</h1>
+    <h2>{{message.age}}</h2>
+  </div>
+  <script src="./js/vue.js"></script>
+  <script>
+    const { reactive } = Vue;
+    const App = {
+      setup() {
+        const message = reactive({ name: "Tayler", age: 22 });
+        return {
+          message,
+        };
+      },
+    };
+    Vue.createApp(App).mount("#app");
+    //
+  </script>
+</body>
+
 </html>
