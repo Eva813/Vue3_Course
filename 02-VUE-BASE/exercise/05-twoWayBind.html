@@ -1,29 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>twoWayBind</title>
-  </head>
-  <body>
-    <div id="app">
-      <h1></h1>
-      <input type="text" />
-      <br />
-      <br />
-      <br />
-      <h1></h1>
-      <input type="text" />
-    </div>
-    <script src="./js/vue.js"></script>
-    <script>
-      const { ref, reactive } = Vue;
-      const App = {
-        setup() {
-          return {};
-        },
-      };
-      Vue.createApp(App).mount("#app");
-    </script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>twoWayBind</title>
+  <style>
+    body {
+      background-color: black;
+      color: blanchedalmond;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <h1>{{hello}}</h1>
+    <input type="text" v-model='hello' />
+    <br />
+    <br />
+    <br />
+    <h1>{{message.name}}</h1>
+    <input type="text" v-model='message.name' />
+  </div>
+  <script src="./js/vue.js"></script>
+  <script>
+    //先取出ref, reactive
+    const { ref, reactive } = Vue;
+    const App = {
+      setup() {
+        const hello = ref('Hi Vue!');
+        const message = reactive({ name: 'Tom' });
+        return {
+          hello,
+          message,
+        };
+      },
+    };
+    Vue.createApp(App).mount("#app");
+  </script>
+</body>
+
 </html>
