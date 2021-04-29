@@ -1,22 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ref</title>
-  </head>
-  <body>
-    <div id="app">
-      <h1></h1>
-    </div>
-    <script src="./js/vue.js"></script>
-    <script>
-      const App = {
-        setup() {
-          return {};
-        },
-      };
-      Vue.createApp(App).mount("#app");
-    </script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ref</title>
+</head>
+
+<body>
+  <div id="app">
+    <h1>{{text}}</h1>
+  </div>
+  <script src="./js/vue.js"></script>
+  <script>
+    //透過解構方式，從Vue中取出ref這個方法
+    //在set中
+    const { ref } = Vue;
+    const App = {
+      setup() {
+        //用vue.ref()將資料包裝起來時，會回傳物件，物件中會有一個value的屬性
+        //透過value屬性修改、抓取資料
+        const text = ref('Hello Vue!');
+        const text2 = ref('Hello Vue!');
+        const text3 = ref('Hello Vue!');
+
+        setTimeout(() => {
+          //在原本變數還需加上.value
+          text.value = 'mike';
+          console.log(text);
+        }, 1000)
+        return { text };
+      },
+    };
+    Vue.createApp(App).mount("#app");
+  </script>
+
+  <!-- 當確定將資料放到網頁後 -->
+</body>
+
 </html>
