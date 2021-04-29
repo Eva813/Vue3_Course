@@ -1,13 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>createApp & setup</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script src="./js/vue.js"></script>
-    <script></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>createApp & setup</title>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 這個div裡面的內容，都可以給Vue使用>要用這個div將整個網站包起來 -->
+  </div>
+  <script src="./js/vue.js"></script>
+  <script>
+    //app物件，裡面放和vue3有關的操作內容
+    const app = {
+      setup() {
+        //寫vue和整個操作的內容都會放在這裡面
+        return {};
+      }
+    };
+
+    //創造vue的應用程式本身
+    //mount最外層的div
+    Vue.createApp(app).mount("#app");
+
+
+
+  </script>
+</body>
+
 </html>
