@@ -1,24 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>v-on:Event</title>
-  </head>
-  <body>
-    <div id="app">
-      <h1></h1>
-      <button>Add</button>
-      <button>Remove</button>
-    </div>
-    <script src="./js/vue.js"></script>
-    <script>
-      const App = {
-        setup() {
-          return {};
-        },
-      };
-      Vue.createApp(App).mount("#app");
-    </script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>v-on:Event</title>
+</head>
+
+<body>
+  <div id="app">
+    <h1>{{num}}</h1>
+
+    <button v-on:click="addFn">Add</button>
+    <!-- v-on 改為@ -->
+    <button @click="MinusFun">Minus</button>
+  </div>
+  <script src="./js/vue.js"></script>
+  <script>
+    const { ref, reactive } = Vue;
+    const App = {
+      setup() {
+        const num = ref(0);//在畫面增加一個數字0
+
+        // console.log(num)
+        const addFn = () => {
+          //num.value = num.value + 1;
+          num.value++;
+
+        }
+        const MinusFun = () => {
+          num.value--;
+        }
+        return { num, addFn, MinusFun };
+      },
+    };
+    Vue.createApp(App).mount("#app");
+  </script>
+</body>
+
 </html>
