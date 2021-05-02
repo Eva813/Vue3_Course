@@ -1,37 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>readonly</title>
-    <style>
-      button {
-        color: red;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="app">
-      <h1>{{Num.idx}}</h1>
-      <button @click="AddFn">Add</button>
-      <button @click="Test">Add copy</button>
-    </div>
-    <script src="./js/vue.js"></script>
-    <script>
-      const { reactive } = Vue;
-      const App = {
-        setup() {
-          const Num = reactive({ idx: 0 });
-          const AddFn = () => {
-            Num.idx++;
-          };
 
-          const Test = () => {};
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>readonly</title>
+  <style>
+    button {
+      color: red;
+    }
+  </style>
+</head>
 
-          return { Num, AddFn, Test };
-        },
-      };
-      Vue.createApp(App).mount("#app");
-    </script>
-  </body>
+<body>
+  <div id="app">
+    <h1>{{Num.idx}}</h1>
+    <button @click="AddFn">Add</button>
+    <button @click="Test">Add copy</button>
+  </div>
+  <script src="./js/vue.js"></script>
+  <script>
+    const { reactive, readonly } = Vue;
+    const App = {
+      setup() {
+        const Num = reactive({ idx: 0 });
+        //readonly將reactive的方法塞進去
+        const copyNum = readonly(Num);
+        const AddFn = () => {
+          //更改num中idx的數字
+          Num.idx++;
+          //發現readonly和reactive的內容同步更新
+          console.log("Num =>", Num);
+          console.log("copyNum=>", copyNum);
+        };
+
+        const Test = () => {
+          console.log("copyNum in test=>", copyNum);
+          copyNum.idx++;
+        };
+
+        return { Num, AddFn, Test };
+      },
+    };
+    Vue.createApp(App).mount("#app");
+  </script>
+</body>
+
 </html>
