@@ -14,21 +14,21 @@
 
 <body>
   <div id="app">
-    <h1>{{Num.idx}}</h1>
+    <h1>{{Num}}</h1>
     <button @click="AddFn">Add</button>
     <button @click="Test">Add copy</button>
   </div>
   <script src="./js/vue.js"></script>
   <script>
-    const { reactive, readonly } = Vue;
+    const { ref, readonly } = Vue;
     const App = {
       setup() {
-        const Num = reactive({ idx: 0 });
+        const Num = ref(0)
         //readonly將reactive的方法塞進去
         const copyNum = readonly(Num);
         const AddFn = () => {
           //更改num中idx的數字
-          Num.idx++;
+          Num.value++;
           //發現readonly和reactive的內容同步更新
           console.log("Num =>", Num);
           console.log("copyNum=>", copyNum);
@@ -36,7 +36,7 @@
 
         const Test = () => {
           console.log("copyNum in test=>", copyNum);
-          copyNum.idx++;
+          copyNum.value++;
         };
 
         return { Num, AddFn, Test };
