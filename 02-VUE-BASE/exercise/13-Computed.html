@@ -67,8 +67,8 @@
 <body>
   <div id="app">
     <a @click="HandListShow" class="title">課程列表</a>
-    <ul class="box" :style='{height:ulHeight}'>
-      <li v-for="(list, idx) in listArr" :key="list">{{list.name}}</li>
+    <ul class="box" :style='{height:ulFn()}'>
+      <li v-for="(list, idx) in newArr" :key="list.course">{{list.course}}</li>
     </ul>
   </div>
   <script src="./js/vue.js"></script>
@@ -92,18 +92,35 @@
           isOpen.value = !isOpen.value;
         };
         const ulHeight = computed(() => {
-          if (isOpen.value) {
-            return `${listArr.length * 40}px`
-          } else {
-            return 0;
-          }
+
+          return isOpen.value ? `${listArr.length * 40}px` : 0;
+        });
+        //使用fn
+        const ulFn = () => {
+          return isOpen.value ? `${listArr.length * 40}px` : 0;
+        }
+
+        const newArr = computed(() => {
+          //用map創造新陣列，重組資料
+          const map = listArr.map(item => {
+            //回傳物件
+            return {
+              course: `${item.name} $:${item.money}`
+            };
+
+          });
+          console.log(map)
+          return map;
         })
 
         return {
           isOpen,
-          listArr,
+          // listArr,
+          newArr,
+
           HandListShow,
           ulHeight,
+          ulFn,
         };
       },
     };
