@@ -21,9 +21,9 @@
         const data = ref({ user: {} });
 
         //deep就是告訴watch接下來要監控的這個資料，都要進行深層監控
-        watch(data, (newVal) => {
+        watch(data.value.user, (newVal) => {
           console.log(newVal);
-        }, { deep: true });
+        });
 
         setTimeout(() => {
           //在user中新增物件內容
