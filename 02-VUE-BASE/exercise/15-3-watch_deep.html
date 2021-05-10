@@ -1,31 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>watch deep</title>
-  </head>
-  <body>
-    <div id="app"></div>
 
-    <script src="./js/vue.js"></script>
-    <script>
-      const { ref, reactive, watch } = Vue;
-      const App = {
-        setup() {
-          const data = ref({ user: {} });
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>watch deep</title>
+</head>
 
-          watch(data, (newVal) => {
-            console.log(newVal);
-          });
+<body>
+  <div id="app"></div>
 
-          setTimeout(() => {}, 1000);
+  <script src="./js/vue.js"></script>
+  <script>
+    const { ref, reactive, watch } = Vue;
+    const App = {
+      setup() {
 
-          return {};
-        },
-      };
+        //透過ref來包裝
+        //無法針對物件做深層監控
+        const data = ref({ user: {} });
 
-      Vue.createApp(App).mount("#app");
-    </script>
-  </body>
+        //deep就是告訴watch接下來要監控的這個資料，都要進行深層監控
+        watch(data, (newVal) => {
+          console.log(newVal);
+        }, { deep: true });
+
+        setTimeout(() => {
+          //在user中新增物件內容
+          data.value.user["name"] = 'Eva';
+        }, 1000);
+
+        return {};
+      },
+    };
+
+    Vue.createApp(App).mount("#app");
+  </script>
+</body>
+
 </html>
