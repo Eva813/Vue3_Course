@@ -1,68 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>非同步處理</title>
-    <style>
-      * {
-        padding: 0;
-        margin: 0;
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: slategray;
-      }
-      .box {
-        width: 500px;
-      }
-      .box > .btnbox {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-      }
-      .box > .btnbox > a {
-        padding: 10px 10px;
-        color: #fff;
-        font-weight: bold;
-        font-size: 18px;
-      }
-      .img {
-        border: 8px solid #42b983;
-      }
-      .load {
-        width: 40px;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="app">
-      <div class="box">
-        <div>
-          <img class="img" src="" alt="" />
-        </div>
-        <div class="btnbox">
-          <a href="javascript:;">上一張</a>
-          <a href="javascript:;">下一張</a>
-        </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>非同步處理</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: slategray;
+    }
+
+    .box {
+      width: 500px;
+    }
+
+    .box>.btnbox {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .box>.btnbox>a {
+      padding: 10px 10px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .img {
+      border: 8px solid #42b983;
+    }
+
+    .load {
+      width: 40px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="box" v-if='isLoad'>
+      <div>
+        <img v-for='(item,i) in imgArr.arr' v-show="imgIdx===i" :key="item.url" class="img" :src="item.url" alt="" />
       </div>
-      <img class="load" src="./images/load.gif" alt="" />
+      <div class="btnbox" v-if='isLoad'>
+        <a @click="imgRemove" href="javascript:;">上一張</a>
+        <a @click="imgAdd" href="javascript:;">下一張</a>
+      </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js"></script>
-    <script src="./js/vue.js"></script>
-    <script>
-      const app = {
-        setup() {
-          return {};
-        },
-      };
-      Vue.createApp(app).mount("#app");
-    </script>
-  </body>
+    <img class="load" v-if='!isLoad' src="./images/load.gif" alt="" />
+  </div>
+  <!-- //axios -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js"></script>
+  <script src="./js/vue.js"></script>
+  <script>
+    const { onMounted, reactive, ref } = Vue;
+    const app = {
+      setup() {
+        const imgArr = reactive({ arr: [] });
+        const imgIdx = ref(0);
+
+        const isLoad = ref(false);
+
+        const imgAdd = () => {
+          imgIdx.value++;
+          if (imgIdx.value > imgArr.arr.length - 1) {
+            imgIdx.value = 0;
+          };
+        };
+        const imgRemove = () => {
+          imgIdx.value--;
+          if (imgIdx.value < 0) {
+            imgIdx.value = imgArr.arr.length - 1;
+          };
+        };
+        //檢測圖片有沒有載入完
+        const handImgLoad = (handImageArr) => {
+          let i = 0;
+          console.log('handImageArr', handImageArr);
+          handImageArr.forEach((image) => {
+            //console.log('image', image);
+            const newImage = new Image(); //Image()
+            newImage.src = image.url;
+            //每次塞入src都是非同步的處理，網頁會非同步載入圖片路徑
+            newImage.onload = () => {
+              //如何確定array中的圖片全部載入完成？let i=0，透過i來記錄loading跑完沒有。(每一次onload完後i++)
+              i++;
+              if (handImageArr.length === i) {
+
+                //在確定載入完之後，再將dom元素顯示
+                imgArr.arr = handImageArr;
+                isLoad.value = true;
+              };
+            };
+          });
+        };
+
+        onMounted(() => {
+          axios.get('https://vue-lessons-api.herokuapp.com/photo/list')
+            .then((res) => {
+              //將拿到的資料直接丟到`handImgLoad`
+              handImgLoad(res.data);
+              //讓空陣列=所串到的回傳資料
+              // imgArr.arr = res.data;
+              console.log(res.data);
+            });
+        });
+        return { imgArr, imgIdx, imgAdd, imgRemove, isLoad };
+      },
+    };
+    Vue.createApp(app).mount("#app");
+  </script>
+</body>
+
 </html>
