@@ -12,41 +12,82 @@
   <div id="app">
     <div class="wait">
       <ul>
-        <li>
-          <img src="" alt="" />
+        <li v-for="(item,idx) in todoWait.content" :key="item.url" @click="handClick(item,idx)">
+          <!-- 點擊時傳入拼圖物件 -->
+          <img :src="item.url" alt="" />
         </li>
       </ul>
     </div>
     <div class="carried">
       <ul>
-        <li>
-          <img alt="" />
+        <li v-for="(item,idx) in todoOver.content" :key="item.url" @click="restClick(item,idx)">
+          <img :src="item.url" alt="" />
         </li>
       </ul>
     </div>
-    <div class="winPage">
+    <!-- 綁定class -->
+    <div :class="['winPage',{open:isWin}]">
       <h1>闖關成功</h1>
     </div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js"></script>
   <script src="./js/vue.js"></script>
   <script>
-    const { reactive, onMounted } = Vue;
+    const { reactive, onMounted, watch, ref } = Vue;
     const app = {
       setup() {
         //初始化的拼圖(在reactive中塞入一個物件)
         const todoWait = reactive({ content: [] });
         //移動過去的拼圖
-        const rodoOver = reactive({ content: [] });
+        const todoOver = reactive({ content: [] });
+
+        const countIdx = ref(0);
+        const isWin = ref(false);
+        //監測的是reactive的資料，所以要先放入函式，再接call back
+        watch(() => todoOver.content, (newArr) => {
+          //console.log(newArr);
+          countIdx.value = 0;
+          newArr.forEach((wathcItem, idx) => {
+
+            //如果wathcItem.idx和newArr中的idx一樣，就表示順序一致
+            if (wathcItem.idx === idx) {
+              //因為每次push進來，都回重新算過，所以要設定初始值(歸零)
+              countIdx.value++;
+              //console.log('ok');
+            }
+
+          })
+        }, { deep: true }
+        );
+
+        watch(countIdx, (newVal) => {
+          if (newVal === 9) {
+            isWin.value = true;
+          };
+        });
+
+        const handClick = (item, idx) => {
+          //將傳進來得拼圖物件，傳入todoOver中的陣列
+          todoOver.content.push(item);
+          todoWait.content.splice(idx, 1);
+        };
+
+        const restClick = (item, idx) => {
+          todoWait.content.push(item);
+          todoOver.content.splice(idx, 1);
+        }
+
 
         onMounted(() => {
           axios.get('./api/puzzle.json')
             .then((res) => {
-              console.log(res);
+              //將串接到資料賦予給空陣列
+              todoWait.content = res.data;
+              //console.log(todoWait.content);
             });
         });
 
-        return {};
+        return { todoWait, todoOver, handClick, restClick, isWin };
       },
     };
     Vue.createApp(app).mount("#app");
