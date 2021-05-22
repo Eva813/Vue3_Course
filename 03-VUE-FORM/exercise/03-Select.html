@@ -16,11 +16,12 @@
         <option disabled value="">請選擇縣市</option>
         <option v-for="(item) in newArr.city" :value="item.name" :key="item.name">{{item.name}}</option>
       </select>
-      <select>
+      <select v-model="selectedArea">
         <option disabled value="">請選擇區域</option>
+        <option v-for='(item) in newArr.area ' :value="item.zip" :key="item.name">{{item.name}}</option>
       </select>
     </div>
-    <a class="btn">送出</a>
+    <a class="btn" @click="handleSubmit">送出</a>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js"></script>
   <script src="./js/vue.js"></script>
@@ -35,11 +36,21 @@
         //定義選取到的縣市、區域
         const selectedCity = ref('');
         const selectedArea = ref('');
-        watch(selectedCity, (selected) => {
-          const matchCity = newArr.city.filter((city) => { return city.name === selected })
-          console.log(matchCity);
-        })
 
+        //WATCH
+        watch(selectedCity, (selected) => {
+          const matchCity = newArr.city.filter((city) => { return city.name === selected });
+          //每次選擇完左方的縣市之後，要記得清空區域的選單
+          selectedArea.value = '';
+          newArr.area = matchCity[0].area;
+          //console.log(newArr.area);
+        })
+        //查看送按鈕，點擊後所傳給後端的資料
+        const handleSubmit = () => {
+          console.log(selectedCity.value);
+          console.log(selectedArea.value);
+
+        }
 
 
         axios.get('https://vue-lessons-api.herokuapp.com/city/list')
@@ -47,7 +58,7 @@
             newArr.city = res.data.twzip.city;
             //console.log(newArr.city);
           })
-        return { newArr, selectedCity, selectedArea };
+        return { newArr, selectedCity, selectedArea, handleSubmit };
       },
     };
 
