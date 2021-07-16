@@ -10,6 +10,7 @@ app.directive("focus", {
   },
 });
 
+
 app.directive("price", {
   mounted(el, binding) {
     const p = numPrice(binding.value);

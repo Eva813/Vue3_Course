@@ -22,7 +22,7 @@ export default {
     type="text"
     placeholder="input text"
   />
-  <h1 v-price="num"></h1>
+  <h1 v-price='num'></h1>
 </template>
 
 <style scoped>

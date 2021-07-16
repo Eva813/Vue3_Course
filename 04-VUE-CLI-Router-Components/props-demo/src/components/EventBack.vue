@@ -11,6 +11,7 @@ export default {
     };
   },
 };
+
 </script>
 <template>
   <a @click="handClickFn(100, $event)" href="javascript:;">click</a>

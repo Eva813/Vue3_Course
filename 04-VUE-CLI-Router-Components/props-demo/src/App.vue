@@ -50,6 +50,7 @@ export default {
   <!-- <EventBack /> -->
 
   <TemplateRefs />
+  <slots-title>mike</slots-title>
 
   <!-- 
     <button>click</button>
